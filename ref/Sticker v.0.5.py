@@ -6,7 +6,6 @@ import sys
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import os
-import traceback
 
 
 class Sticker(QWidget):
@@ -24,8 +23,6 @@ class Sticker(QWidget):
 
         self.imgsize = 400
 
-        # sizegrip = QSizeGrip(self)
-        # layout.addWidget(sizegrip, 0, Qt.AlignBottom | Qt.AlignRight)
         self.setLayout(layout)
 
         self.show()
@@ -84,19 +81,8 @@ class Sticker(QWidget):
         contextMenu = QMenu(self)
         # newAct = contextMenu.addAction("New")
         openAct = contextMenu.addAction("Open")
-        sizeAct = contextMenu.addAction("Set Size")
         quitAct = contextMenu.addAction("Quit")
-
         action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-
-        if action == sizeAct:
-            alert = QMessageBox()
-            alert.setWindowTitle("Fuck Off")
-            alert.setText("Invalid File Format")
-            alert.setDetailedText(str(traceback.format_exc()))
-            alert.setStandardButtons(QMessageBox.Ok)
-            alert.setDefaultButton(QMessageBox.Ok)
-            ret = alert.exec_()
 
         if action == openAct:
             dialog = QFileDialog()
@@ -118,20 +104,8 @@ class Sticker(QWidget):
                     print("움짤")
                     self.setMovie(filename[0])
 
-                elif filename[0].split(".")[-1] == "png":
-                    self.setPixmap(filename[0])
-
                 else:
-                    alert = QMessageBox()
-                    alert.setWindowTitle("Fuck Off")
-                    alert.setGeometry(
-                        self.x() + 100, self.y() + 100, self.width(), self.height()
-                    )
-                    alert.setText("Invalid File Format")
-                    alert.setDetailedText(str(traceback.format_exc()))
-                    alert.setStandardButtons(QMessageBox.Ok)
-                    alert.setDefaultButton(QMessageBox.Ok)
-                    ret = alert.exec_()
+                    self.setPixmap(filename[0])
 
         if action == quitAct:
             self.close()
@@ -153,50 +127,9 @@ class Sticker(QWidget):
         except:
             print("error")
 
-    # def mouseReleaseEvent(self, event):
-    #     self.offset = None
-    #     screen = QDesktopWidget().availableGeometry()
-    #     widget = self.geometry()
-
-    #     left = widget.left() - screen.left()
-    #     top = widget.top() - screen.top()
-    #     right = screen.right() - widget.right()
-    #     bottom = screen.bottom() - widget.bottom()
-
-    #     offset = 100
-    #     relative_zero = 0
-    #     relative_top = widget.top()
-    #     relative_left = widget.left()
-    #     relative_right = screen.width() - widget.width()
-    #     relative_bottom = screen.height() - widget.height()
-
-    #     if left < offset:
-    #         self.move(relative_zero, relative_top)
-    #         if top < offset:
-    #             self.move(relative_zero, relative_zero)
-    #         elif bottom < offset:
-    #             self.move(relative_zero, relative_bottom)
-    #     elif right < offset:
-    #         self.move(relative_right, relative_top)
-    #         if top < offset:
-    #             self.move(relative_right, relative_zero)
-    #         elif bottom < offset:
-    #             self.move(relative_right, relative_bottom)
-    #     elif top < offset:
-    #         self.move(relative_left, relative_zero)
-    #     elif bottom < offset:
-    #         self.move(relative_left, relative_bottom)
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Sticker()
-
-    # palatte = window.palette()
-    # trs = QColor("transparent")
-    # trs.setAlpha(100)
-    # palatte.setColor(window.backgroundRole(), trs)
-    # window.setPalette(palatte)
-
     window.show()
     sys.exit(app.exec())

@@ -90,13 +90,7 @@ class Sticker(QWidget):
         action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
         if action == sizeAct:
-            alert = QMessageBox()
-            alert.setWindowTitle("Fuck Off")
-            alert.setText("Invalid File Format")
-            alert.setDetailedText(str(traceback.format_exc()))
-            alert.setStandardButtons(QMessageBox.Ok)
-            alert.setDefaultButton(QMessageBox.Ok)
-            ret = alert.exec_()
+            print("size")
 
         if action == openAct:
             dialog = QFileDialog()
@@ -124,9 +118,6 @@ class Sticker(QWidget):
                 else:
                     alert = QMessageBox()
                     alert.setWindowTitle("Fuck Off")
-                    alert.setGeometry(
-                        self.x() + 100, self.y() + 100, self.width(), self.height()
-                    )
                     alert.setText("Invalid File Format")
                     alert.setDetailedText(str(traceback.format_exc()))
                     alert.setStandardButtons(QMessageBox.Ok)
