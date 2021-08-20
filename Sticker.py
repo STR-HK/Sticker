@@ -33,6 +33,7 @@ class Sticker(QWidget):
         self.setPixmap(
             os.path.abspath(os.path.join(os.path.dirname(__file__), "67669539.png"))
         )
+        self.filename = ["67669539.png"]
 
     def setPixmap(self, path=None, pixmap=None):
         if pixmap:
@@ -90,51 +91,47 @@ class Sticker(QWidget):
         action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
         if action == sizeAct:
-            alert = QMessageBox()
-            alert.setWindowTitle("Fuck Off")
-            alert.setText("Invalid File Format")
-            alert.setDetailedText(str(traceback.format_exc()))
-            alert.setStandardButtons(QMessageBox.Ok)
-            alert.setDefaultButton(QMessageBox.Ok)
-            ret = alert.exec_()
+            text, ok = QInputDialog.getText(self, "Size Change", "Input new Size")
+            if ok and text.isnumeric():
+                self.imgsize = int(text)
+                self.open()
 
         if action == openAct:
             dialog = QFileDialog()
             dialog.setFileMode(QFileDialog.AnyFile)
-
-            filename = dialog.getOpenFileName(
+            self.filename = dialog.getOpenFileName(
                 caption="Open Image file",
                 filter="Image files (*.png *.gif)",
                 directory=".",
             )
-
-            if filename:
-                if filename[0] == "":
-                    return
-
-                print(filename[0])
-
-                if filename[0].split(".")[-1] == "gif":
-                    print("움짤")
-                    self.setMovie(filename[0])
-
-                elif filename[0].split(".")[-1] == "png":
-                    self.setPixmap(filename[0])
-
-                else:
-                    alert = QMessageBox()
-                    alert.setWindowTitle("Fuck Off")
-                    alert.setGeometry(
-                        self.x() + 100, self.y() + 100, self.width(), self.height()
-                    )
-                    alert.setText("Invalid File Format")
-                    alert.setDetailedText(str(traceback.format_exc()))
-                    alert.setStandardButtons(QMessageBox.Ok)
-                    alert.setDefaultButton(QMessageBox.Ok)
-                    ret = alert.exec_()
+            self.open()
 
         if action == quitAct:
             self.close()
+
+    def open(self):
+        if self.filename:
+
+            if self.filename[0] == "":
+                return
+
+            if self.filename[0].split(".")[-1] == "gif":
+                self.setMovie(self.filename[0])
+
+            elif self.filename[0].split(".")[-1] == "png":
+                self.setPixmap(self.filename[0])
+
+            else:
+                alert = QMessageBox()
+                alert.setWindowTitle("Fuck Off")
+                alert.setGeometry(
+                    self.x() + 100, self.y() + 100, self.width(), self.height()
+                )
+                alert.setText("Invalid File Format")
+                alert.setDetailedText(str(traceback.format_exc()))
+                alert.setStandardButtons(QMessageBox.Ok)
+                alert.setDefaultButton(QMessageBox.Ok)
+                ret = alert.exec_()
 
     def mouseDoubleClickEvent(self, event):
         print(event.pos())
